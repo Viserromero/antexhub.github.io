@@ -1,6 +1,6 @@
-const discord = require("discord.js") // Not Important
+const discord = require("discord.js")
 
-const client = new discord.Client() // Not Important
+const client = new discord.Client()
 const db = require("quick.db")
 const axios = require('axios');
 const Express = require("express");
@@ -8,20 +8,19 @@ const App = Express();
 // ----- Settings ----- \\
 const Settings = {
   //THIS IS IMPORTANT\\
-  GUILD_ID: "709476793769525299", // THIS IS VERY IMPORTANT, THIS IS THE ID OF YOUR SERVER, SEARCH ON YOUTUBE HOW TO GET IT IF YOU DONT KNOW HOW
-  OWNER_ID: "505735992398053376", // THIS IS VERY IMPORTANT, THIS IS THE ID OF YOUR PROFILE, SEARCH ON YOUTUBE HOW TO GET IT IF YOU DONT KNOW HOW
-  Shoppy_API_KEY: "sYNpDybF1RGnkA4X3qJMBqKIQphGw4GrqoHm9DI5T48Nv86mei", // Create a Shoppy account If you haven't, then go to https://shoppy.gg/user/settings and look for your "API-KEY".
-  Whitelisted_Role_ID: "774426107209580574", // When users use the !whitelist or !rewhitelist command, they get this role.
-  Blacklisted_Role_ID: "774426189673922600", // When users who are not whitelist use the !rewhitelist command with a buyers Shoppy Order ID, they get this role.
-  LogsChannel_Channel_ID: "774426511814033408", // Create a channel for logs when a user is whtelisted or uses a command!
+  GUILD_ID: "709476793769525299",
+  OWNER_ID: "505735992398053376",
+  Shoppy_API_KEY: "sYNpDybF1RGnkA4X3qJMBqKIQphGw4GrqoHm9DI5T48Nv86mei",
+  Whitelisted_Role_ID: "774426107209580574",
+  Blacklisted_Role_ID: "774426189673922600",
+  LogsChannel_Channel_ID: "774426511814033408",
   //----------------\\
-  KeyDataStart: "Data_" ,// The Data for the keys
-  UsersDataStart: "UsersData_", // The Data for the users
-  KeyRobloxNameDataStart: "RobloxData_" // Data for rolbox users
+  KeyDataStart: "Data_" ,
+  UsersDataStart: "UsersData_",
+  KeyRobloxNameDataStart: "RobloxData_"
 }
-// ----- Settings ----- \\
 
-App.get("/checkwl", (request, res) => {  // checks whitelist
+App.get("/checkwl", (request, res) => {
    let ThereKey =  request.query.Key;
   let robloxUser = request.query.User;
   if(!ThereKey) {
@@ -36,7 +35,7 @@ App.get("/checkwl", (request, res) => {  // checks whitelist
   if(ShoppyIDS) {
     if (db.get(Settings.UsersDataStart+ThereKey)) {
       if (robloxUser === db.get(Settings.UsersDataStart+ThereKey)) {
-        res.send("Correct") // CHANGE THIS TO MAKE THE WHITELIST MORE SECURE!
+        res.send("Correct")
         return "Correct";
       }
       else
@@ -59,16 +58,16 @@ App.get("/checkwl", (request, res) => {  // checks whitelist
 })
 
 client.on("message", message => {
-const args = message.content.slice("!".length).trim().split(/ +/g); // Not Important
-const content = args.shift().toLowerCase(); // Not Important
+const args = message.content.slice("!".length).trim().split(/ +/g);
+const content = args.shift().toLowerCase();
 if (content === "whitelist") {
   const key = args[0]
   let robloxid = args[1]
-  if(!key)return(message.reply("Please Include your Shoppy Purchase ID!")) // Checks If they Included there Shoppy ID 
-   if(!robloxid)return(message.reply("Please include a roblox id to whitelist!")) // Checks If they Included there Shoppy ID
+  if(!key)return(message.reply("Please Include your Shoppy Purchase ID!"))
+   if(!robloxid)return(message.reply("Please include a roblox id to whitelist!"))
    axios.get("https://shoppy.gg/api/v1/orders/"+key, {
       headers: {
-      Authorization: Settings.Shoppy_API_KEY, // Needed to log data.
+      Authorization: Settings.Shoppy_API_KEY,
       }
    })
    .then(function (res) { 
@@ -89,7 +88,7 @@ if (content === "whitelist") {
          message.reply("You have successfully been whitelisted! Here are your details:")
          message.reply(embed)
          message.reply("Here is the script:")
-         message.reply("_G.Key = '"+key+"'\nloadstring(game:HttpGet('https://antex-hub.herokuapp.com/script.lua', true))()") // Change PROJECTNAME to the project u made on heroku!!!
+         message.reply("_G.Key = '"+key+"'\nloadstring(game:HttpGet('https://antex-hub.herokuapp.com/script.lua', true))()")
          client.guilds.cache.get(Settings.GUILD_ID).channels.cache.get(Settings.LogsChannel_Channel_ID).send(embed)
          return;
        }
@@ -123,7 +122,7 @@ if(content === "getdata") {
     {
       axios.get("https://shoppy.gg/api/v1/orders/"+key, {
             headers: {
-              Authorization: Settings.Shoppy_AuthorizationID, // Needed to log data.
+              Authorization: Settings.Shoppy_AuthorizationID,
             }
           }).then(function (response) { 
         console.log(response.data)
